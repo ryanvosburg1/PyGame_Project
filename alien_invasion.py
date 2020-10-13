@@ -20,21 +20,28 @@ class AlienInvasion:
         #set background color
         self.bg_color = (230,230,230)
 
-    def run_game(self):
+    def run_game(self): #run game calls the smaller functions that help it work
         '''start main loop for game'''
         while True:
+            self._check_events()
+            self._update_screen()
             #watch for keyboard and mouse events
+    def _check_events(self):
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+                if event.type == pygame.QUIT: #if exit window, quit game
                     sys.exit()
-        
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RIGHT: #move ship to right if arrow right
+                        self.ship.rect.x +=1
+    def _update_screen(self):
+        '''update images on the screen and flip to a new screen'''    
             #redraw screen during each pass trhough loop
-            self.screen.fill(self.bg_color)
-            self.ship.blitme()
+        self.screen.fill(self.bg_color)
+        self.ship.blitme() #call the ship in front of the background
             #make most recently drawn screen visible
-            pygame.display.flip()
+        pygame.display.flip()
 
 if __name__ == '__main__':
     #make a game instance and run the game
     ai = AlienInvasion()
-    ai.run_game()
+    ai.run_game() #in if statement so only runs if called directly
