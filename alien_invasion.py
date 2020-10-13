@@ -2,6 +2,7 @@ import sys
 import pygame
 from settings import Settings
 from ship import Ship
+from bullet import Bullet
 
 class AlienInvasion:
     """overall class to manage game assets and behavior."""
@@ -11,12 +12,16 @@ class AlienInvasion:
         pygame.init()
         self.settings = Settings()
 
+        '''self.screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+        self.settings.screen_width = self.screen.get_rect().width
+        self.settings.screen_height = self.screen.get_rect().height'''
         self.screen = pygame.display.set_mode(
             (self.settings.screen_width, self.settings.screen_height))
         #creates display window and pulls size from settings
         pygame.display.set_caption("Alien Invasion")
 
         self.ship = Ship(self)
+        self.bullets = pygame.sprite.Group()
         #set background color
         self.bg_color = (230,230,230)
 
@@ -25,6 +30,14 @@ class AlienInvasion:
         while True:
             self._check_events()
             self.ship.update() #updates ship's position each loop through
+            self.bullets.update()
+
+            for bullet in self.bullets.copy():
+                if bullet.rect.bottom <= 0:
+                    self.bullets.remove(bullet)
+            print(len(self.bullets))
+            #get rid of bullets that have dissappeared
+
             self._update_screen()
             #watch for keyboard and mouse events
     def _check_events(self):
@@ -32,21 +45,38 @@ class AlienInvasion:
                 if event.type == pygame.QUIT: #if exit window, quit game
                     sys.exit()
                 elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RIGHT: #move ship to right if arrow right
-                        self.ship.moving_right = True #gets ship.py settings to move right continuously 
-                    if event.key == pygame.K_LEFT:
-                        self.ship.moving_left = True
+                    self._check_keydown_events(event)#goes below to function check keydown
                 elif event.type == pygame.KEYUP:
-                    if event.key == pygame.K_RIGHT:
-                        self.ship.moving_right = False
-                    if event.key == pygame.K_LEFT:
-                        self.ship.moving_left = False
+                    self._check_keyup_events(event)  
+    def _check_keydown_events(self, event): #respond to keypresses
+        if event.key == pygame.K_RIGHT: #move ship to right if arrow right
+            self.ship.moving_right = True #gets ship.py settings to move right continuously 
+        elif event.key == pygame.K_LEFT:
+            self.ship.moving_left = True  
+        elif event.key == pygame.K_q:
+            sys.exit()  
+        elif event.key == pygame.K_SPACE:
+            self._fire_bullet()
+    def _check_keyup_events(self, event): #respond to key releases
+        if event.key == pygame.K_RIGHT:
+            self.ship.moving_right = False
+        if event.key == pygame.K_LEFT:
+            self.ship.moving_left = False
+
+    def _fire_bullet(self):
+        '''create a new bullet and add it to bullets group'''
+        if len(self.bullets) < self.settings.bullets_allowed:
+            new_bullet = Bullet(self)
+            self.bullets.add(new_bullet)
+
     def _update_screen(self):
         '''update images on the screen and flip to a new screen'''    
             #redraw screen during each pass trhough loop
         self.screen.fill(self.bg_color)
         self.ship.blitme() #call the ship in front of the background
             #make most recently drawn screen visible
+        for bullet in self.bullets.sprites():
+            bullet.draw_bullet()
         pygame.display.flip()
 
 if __name__ == '__main__':
