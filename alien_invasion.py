@@ -21,25 +21,26 @@ class AlienInvasion:
         pygame.display.set_caption("Alien Invasion")
 
         self.ship = Ship(self)
-        self.bullets = pygame.sprite.Group()
-        #set background color
-        self.bg_color = (230,230,230)
+        self.bullets = pygame.sprite.Group() #pulls bullet
+        self.bg_color = (230,230,230)        #set background color
 
     def run_game(self): #run game calls the smaller functions that help it work
         '''start main loop for game'''
-        while True:
-            self._check_events()
+        while True: #constantly looping through game
+            self._check_events() #checks for keys and processes through checkdown/checkups
             self.ship.update() #updates ship's position each loop through
-            self.bullets.update()
+            self._update_bullets()
+            self._update_screen()#redraws screen each time
+            #watch for keyboard and mouse events            
+    def _update_bullets(self):           
+        self.bullets.update()#updates bullets on screen
 
-            for bullet in self.bullets.copy():
-                if bullet.rect.bottom <= 0:
-                    self.bullets.remove(bullet)
-            print(len(self.bullets))
+        for bullet in self.bullets.copy():
+            if bullet.rect.bottom <= 0:
+                self.bullets.remove(bullet)
+        print(len(self.bullets))
             #get rid of bullets that have dissappeared
 
-            self._update_screen()
-            #watch for keyboard and mouse events
     def _check_events(self):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT: #if exit window, quit game
@@ -56,7 +57,7 @@ class AlienInvasion:
         elif event.key == pygame.K_q:
             sys.exit()  
         elif event.key == pygame.K_SPACE:
-            self._fire_bullet()
+            self._fire_bullet() #goes to fire bulet function
     def _check_keyup_events(self, event): #respond to key releases
         if event.key == pygame.K_RIGHT:
             self.ship.moving_right = False
