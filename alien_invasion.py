@@ -127,7 +127,8 @@ class AlienInvasion:
         #says to delete bullet and aliens if collide with true true argument
     
         if collisions:
-            self.stats.score += self.settings.alien_points
+            for aliens in collisions.values(): #make sure if 2 bullets collde in same pass
+                self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
 
         #destroy existing bullets and create new fleet
