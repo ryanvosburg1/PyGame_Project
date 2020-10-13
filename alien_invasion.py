@@ -6,6 +6,8 @@ from game_stats import GameStats
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
+from button import Button
+
 
 class AlienInvasion:
     """overall class to manage game assets and behavior."""
@@ -32,6 +34,9 @@ class AlienInvasion:
         self.bg_color = (230,230,230)        #set background color
 
         self._create_fleet()
+
+        #make play button
+        self.play_button = Button(self, "Play")
 
     def _ship_hit(self):
         '''respond to ship hit by aliens'''
@@ -153,6 +158,15 @@ class AlienInvasion:
                     self._check_keydown_events(event)#goes below to function check keydown
                 elif event.type == pygame.KEYUP:
                     self._check_keyup_events(event)  
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = pygame.mouse.get_pos()
+                    self._check_play_button(mouse_pos)
+
+    def _check_play_button(self, mouse_pos):
+        '''start a new game when player clicks play'''
+        if self.play_button.rect.collidepoint(mouse_pos):
+            self.stats.game_active = True
+
     def _check_keydown_events(self, event): #respond to keypresses
         if event.key == pygame.K_RIGHT: #move ship to right if arrow right
             self.ship.moving_right = True #gets ship.py settings to move right continuously 
@@ -183,6 +197,11 @@ class AlienInvasion:
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         self.aliens.draw(self.screen)#draw puts element by rect attirubte on screen bc screen argument in ()
+        
+        #draw play button if game inactive
+        if not self.stats.game_active:
+            self.play_button.draw_button()
+        
         pygame.display.flip()
 
 if __name__ == '__main__':
