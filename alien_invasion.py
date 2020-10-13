@@ -56,6 +56,7 @@ class AlienInvasion:
             sleep(0.5)
         else:
             self.stats.game_active = False #ends game stats if no ships left
+            pygame.mouse.set_visible(True) #brings back mouse after game ends
     def _create_fleet(self):
         #create fleet of aliens
         #make an alien
@@ -126,6 +127,7 @@ class AlienInvasion:
         if not self.aliens:
             self.bullets.empty()
             self._create_fleet()
+            self.settings.increase_speed()
 
     def _check_aliens_bottom(self):
         '''check if aliens reach bottom of screen'''
@@ -164,8 +166,23 @@ class AlienInvasion:
 
     def _check_play_button(self, mouse_pos):
         '''start a new game when player clicks play'''
-        if self.play_button.rect.collidepoint(mouse_pos):
+        button_clicked = self.play_button.rect.collidepoint(mouse_pos)
+        if button_clicked and not self.stats.game_active:
+            #reset game settings
+            self.settings.initialize_dynamic_settings()
+            #reset game stats
+            self.stats.reset_stats()
             self.stats.game_active = True
+            #get rid of remaining aliens/bullets
+            self.aliens.empty()
+            self.bullets.empty()
+
+            #create new fleet and ship center
+            self._create_fleet()
+            self.ship.center_ship()
+
+            #hide mouse cursor
+            pygame.mouse.set_visible(False)
 
     def _check_keydown_events(self, event): #respond to keypresses
         if event.key == pygame.K_RIGHT: #move ship to right if arrow right
