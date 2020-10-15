@@ -27,7 +27,7 @@ class Ship(Sprite):
         self.moving_left = False
 
     def update(self):
-        #update ships positions based on movement flas
+        #update ships positions based on movement 
         #update ship's x value not rectangle
         #set limits for ship
         if self.moving_right and self.rect.right < self.screen_rect.right:

@@ -1,13 +1,13 @@
 import pygame
 from pygame.sprite import Sprite
-#spirte is built into python as a 2D movable class
+#sprite is built into python as a 2D movable class
 
 class Alien(Sprite):
     '''a class to represent the alien fleet'''
 
     def __init__(self, ai_game):
         '''initialize alien and set start position'''
-        super().__init__()
+        super().__init__() #super helps inherit, avoid referring explicitly to base clase
         self.screen = ai_game.screen
         self.settings = ai_game.settings
         #load alien image and set its rect attribute

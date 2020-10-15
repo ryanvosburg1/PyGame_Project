@@ -9,8 +9,8 @@ class Settings:
         self.bg_color = (230,230,230)
 
         #ship settings
-        self.ship_speed = 1.5#ship moves 1.5 pixels
-        self.ship_limit = 3
+        self.ship_speed = 1.5#ship moves 1.5 pixels right now
+        self.ship_limit = 3 #how many lives
 
         #bullet settings
         self.bullet_speed = 1.5
@@ -25,7 +25,7 @@ class Settings:
         #fleet direction of 1 represents right; -1 means left
         self.fleet_direction = 1
 
-        #how quickly game speeds up
+        #how quickly game speeds up at each level
         self.speedup_scale = 1.1
 
         #how quickly alien point values increase
@@ -34,7 +34,7 @@ class Settings:
         self.initialize_dynamic_settings()
 
     def initialize_dynamic_settings(self):
-        '''initialize settings that change throughout game'''
+        '''initialize settings that change throughout game at dif levels'''
         self.ship_speed = 1.5
         self.bullet_speed = 3.0
         self.alien_speed = 1.0
